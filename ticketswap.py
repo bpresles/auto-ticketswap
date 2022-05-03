@@ -58,7 +58,7 @@ def checktickt(driver, link):
     while not end:
         driver.get(link)
         driver.execute_script("window.scrollTo(0, 400)")
-        time.sleep(3)
+        time.sleep(10)
         dispo = check_exists_by_xpath("//h3[contains(text(),'Disponible')]")
         if dispo:
             if dispo.text == "Disponible":
@@ -77,9 +77,9 @@ def checktickt(driver, link):
                             if buttonbuy:
                                 print(buttonbuy)
                                 buttonbuy.click()
+                                break
                         except Exception as e:
                             print (e)
-
                     end = True
                 else:
                     print ("PAS DE TICKET, nombre de cycle:" + str(counter))
@@ -96,7 +96,8 @@ if __name__ == '__main__':
                         help='ticketswap link')
     args = parser.parse_args()
     strpswd = getpass.getpass('Facebook password:')
-    driver = webdriver.Chrome('./chromedriver')  # Optional argument, if not specified will search path.
+    driver = webdriver.Chrome()
+    #driver = webdriver.Firefox()
     connect_to_facebook(driver, args, strpswd)
     # Sleep for 2 factor auth
     time.sleep(30)
