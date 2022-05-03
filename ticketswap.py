@@ -42,7 +42,6 @@ def connect_to_ticketswap(driver, args, strpswd):
         facebookclick = check_exists_by_xpath("//button[contains(text(),'Se connecter avec Facebook')]")
         print(facebookclick)
         facebookclick.click()
-
     time.sleep(10)
     login = check_exists_by_xpath("//button[contains(text(),'Connectez-vous')]")
     if not login:
@@ -59,7 +58,7 @@ def checktickt(driver, link):
     while not end:
         driver.get(link)
         driver.execute_script("window.scrollTo(0, 400)")
-        time.sleep(1)
+        # time.sleep(2)
         dispo = check_exists_by_xpath("//h3[contains(text(),'Disponible')]")
         if dispo:
             if dispo.text == "Disponible":
@@ -82,6 +81,8 @@ def checktickt(driver, link):
                             print (e)
 
                     end = True
+                else:
+                    print ("PAS DE TICKET, nombre de cycle:" + str(counter))
         else:
             print ("PAS DE TICKET, nombre de cycle:" + str(counter))
         counter += 1
@@ -97,7 +98,8 @@ if __name__ == '__main__':
     strpswd = getpass.getpass('Facebook password:')
     driver = webdriver.Chrome('./chromedriver')  # Optional argument, if not specified will search path.
     connect_to_facebook(driver, args, strpswd)
-    time.sleep(15)
+    # Sleep for 2 factor auth
+    time.sleep(30)
     connect = False
     while not connect:
         connect = connect_to_ticketswap(driver, args, strpswd)
