@@ -58,7 +58,7 @@ def checktickt(driver, link):
     while not end:
         driver.get(link)
         driver.execute_script("window.scrollTo(0, 400)")
-        # time.sleep(2)
+        time.sleep(3)
         dispo = check_exists_by_xpath("//h3[contains(text(),'Disponible')]")
         if dispo:
             if dispo.text == "Disponible":
