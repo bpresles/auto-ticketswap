@@ -29,11 +29,13 @@ def connect_to_facebook(driver, args, strpswd):
     passwd = check_exists_by_xpath('//*[@id="pass"]')
     mail.send_keys(args.email)
     passwd.send_keys(strpswd)
-    connectbutton = driver.find_element_by_id('loginbutton').click()
+    driver.find_element_by_css_selector('button[data-cookiebanner="accept_button"]').click()
+    time.sleep(2)
+    connectbutton = driver.find_element_by_css_selector('button[name="login"]').click()
 
 def connect_to_ticketswap(driver, args, strpswd):
     driver.get('https://www.ticketswap.fr')
-    login = check_exists_by_xpath("//button[contains(text(),'Connecte-toi')]")
+    login = check_exists_by_xpath("//button[contains(text(),'Connectez-vous')]")
     if login:
         login.click()
         time.sleep(2)
@@ -42,7 +44,7 @@ def connect_to_ticketswap(driver, args, strpswd):
         facebookclick.click()
 
     time.sleep(10)
-    login = check_exists_by_xpath("//button[contains(text(),'Connecte-toi')]")
+    login = check_exists_by_xpath("//button[contains(text(),'Connectez-vous')]")
     if not login:
         print("Login success")
         return True
@@ -57,12 +59,12 @@ def checktickt(driver, link):
     while not end:
         driver.get(link)
         driver.execute_script("window.scrollTo(0, 400)")
-        #time.sleep(1)
-        dispo = check_exists_by_xpath("//h2[contains(text(),'Disponible')]")
+        time.sleep(1)
+        dispo = check_exists_by_xpath("//h3[contains(text(),'Disponible')]")
         if dispo:
             if dispo.text == "Disponible":
                 linklist = []
-                linksele = check_exists_by_xpath('//*[@id="__next"]/div[2]/div[3]/div[1]/ul')
+                linksele = check_exists_by_xpath('//ul[@data-testid="available-tickets-list"]')
                 if linksele:
                     items = linksele.find_elements_by_tag_name("a")
                     for item in items:
@@ -72,7 +74,7 @@ def checktickt(driver, link):
                     for link in linklist:
                         driver.get(link)
                         try:
-                            buttonbuy = check_exists_by_xpath("//button[contains(text(),'Acheter un e-billet')]")
+                            buttonbuy = check_exists_by_xpath("//button[contains(text(),'Acheter un billet')]")
                             if buttonbuy:
                                 print(buttonbuy)
                                 buttonbuy.click()
@@ -95,6 +97,7 @@ if __name__ == '__main__':
     strpswd = getpass.getpass('Facebook password:')
     driver = webdriver.Chrome('./chromedriver')  # Optional argument, if not specified will search path.
     connect_to_facebook(driver, args, strpswd)
+    time.sleep(15)
     connect = False
     while not connect:
         connect = connect_to_ticketswap(driver, args, strpswd)
